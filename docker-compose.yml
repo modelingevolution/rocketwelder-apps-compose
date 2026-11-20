@@ -1,7 +1,7 @@
 name: rocketwelder-apps
 
-# AutoUpdater deploy package for the RocketWelder apps image: the RocketWelder Player downloads (Windows, Linux kiosk,
-# Android), their install guides and manifest.json. update-version.sh and prune-old-images.sh read the image from here.
+# AutoUpdater deploy package for the RocketWelder apps image: the Player downloads and the Claude bundles,
+# their install guides and manifest.json. update-version.sh and prune-old-images.sh read the image from here.
 # AutoUpdater pulls the pinned image and runs it; this file never builds.
 # `up -d`:  docker compose -f docker-compose.yml -f docker-compose.x64.yml up -d    # x86_64
 #           docker compose -f docker-compose.yml -f docker-compose.arm64.yml up -d  # ARM64

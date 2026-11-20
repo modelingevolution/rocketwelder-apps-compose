@@ -1,8 +1,10 @@
 # rocketwelder-apps-compose
 
-The AutoUpdater deploy package for the RocketWelder apps image: the RocketWelder Player downloads (Windows .msi, Linux
-kiosk .deb, Android .apk) with their install guides and icon. A station runs it, and the AutoUpdater's Apps page shows
-the downloads. The image is pre-built and pulled, never built here.
+The AutoUpdater deploy package for the RocketWelder apps image. A station runs it, and the AutoUpdater's Apps page
+shows the downloads. The image holds the RocketWelder Player (Windows .msi, Linux kiosk .deb, Android .apk) and the
+Claude bundles (RocketWelder and RocketWelder Simulator, one `.mcpb` each for Windows, Mac and Linux). The image is
+built by `autoupdater/packaging/apps/publish-apps.sh`. `publish.sh` names the apps and calls that script. Nothing is
+built in this repository.
 
 Built from the AutoUpdater's generic template (`autoupdater/packaging/apps/compose`). The image contract (manifest.json,
 guides, icons) is described in `autoupdater/packaging/apps/README.md`.
@@ -15,6 +17,7 @@ guides, icons) is described in `autoupdater/packaging/apps/README.md`.
 | `docker-compose.x64.yml`, `docker-compose.arm64.yml` | Per-arch overrides, layered by AutoUpdater on `uname -m`. |
 | `apps.version` | Bare semver of the pinned release. |
 | `update-version.sh` | `set X.Y.Z` pins the image tag; `list` queries Harbor for release tags. |
+| `publish.sh` | Names the Player and the Claude bundles, then calls `publish-apps.sh`. |
 | `release.sh` | Pins, generates `up-X.Y.Z.sh`, commits, pushes master and the git tag AutoUpdater detects. Refuses a tag that already exists. |
 | `prune-old-images.sh` | Keeps the two newest apps images on a station. Always exits 0. |
 
@@ -22,18 +25,19 @@ guides, icons) is described in `autoupdater/packaging/apps/README.md`.
 
 From the laptop (no CI):
 
-1. Build the installers: the Windows MSI with native-player's `tools\win32\installer.cmd`; the .deb and .apk from the
-   native-player release.
-2. Publish the image with `autoupdater/packaging/apps/publish-apps.sh`, using the guides and icon from native-player:
+1. Build the inputs, in the sibling repos. The Player: `native-player/tools/win32/installer.cmd` writes
+   `dist/RocketWelderPlayer-<player>.msi`; `native-player/release.sh` downloads `dist/native-player_<player>_arm64.deb`;
+   the Android package is `dist/RocketWelderPlayer-<player>-arm64-v8a.apk`. The Claude bundles:
+   `mcp/packaging/pack-mcpb.sh` writes `dist/RocketWelder.mcpb` and `dist/Simulator.mcpb`.
+2. Publish the image from here. This keeps every app. Publishing the Player on its own would drop the Claude bundles,
+   and the other way around.
 
    ```bash
-   ./publish-apps.sh --release X.Y.Z --image docker.modelingevolution.com/rocketwelder/rocketwelder-apps \
-     --app rocketwelder-player --name "RocketWelder Player" --icon rocketwelder-player.png \
-     --download --platform windows --arch x64 --file RocketWelderPlayer-<v>.msi --version <v> --guide windows.md \
-     --download --platform linux --arch arm64 --label "Kiosk devices" --file native-player_<v>_arm64.deb --version <v> --guide linux.md \
-     --download --platform android --arch arm64 --preview --file RocketWelderPlayer-<v>-arm64-v8a.apk --version <v> --guide android.md
+   ./publish.sh 1.0.1 1.2.0 1.0.0
    ```
-3. Pin it here: `./release.sh X.Y.Z`. Stations then see the new version on their Packages page.
+
+   `1.0.1` is the image release, `1.2.0` the Player version, `1.0.0` the bundle version.
+3. Pin it here: `./release.sh 1.0.1`. Stations then see the new version on their Packages page.
 
 ## Register on a station
 
