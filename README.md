@@ -25,8 +25,9 @@ guides, icons) is described in `autoupdater/packaging/apps/README.md`.
 
 From the laptop (no CI):
 
-1. Build the inputs, in the sibling repos. The Player: `native-player/tools/win32/installer.cmd` writes
-   `dist/RocketWelderPlayer-<player>.msi`; `native-player/release.sh` downloads `dist/native-player_<player>_arm64.deb`;
+1. Build the inputs, in the sibling repos. The Windows Player is built on this laptop:
+   `native-player/tools/win32/installer.cmd` writes `build-win-msi/installer/RocketWelderPlayer-<player>.msi`.
+   There is no CI for that installer. `native-player/release.sh` downloads `dist/native-player_<player>_arm64.deb`;
    the Android package is `dist/RocketWelderPlayer-<player>-arm64-v8a.apk`. The Claude bundles:
    `mcp/packaging/pack-mcpb.sh` writes `dist/RocketWelder.mcpb` and `dist/Simulator.mcpb`.
 2. Publish the image from here. This keeps every app. Publishing the Player on its own would drop the Claude bundles,

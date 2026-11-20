@@ -7,8 +7,8 @@
 #   ./publish.sh 1.0.1 1.2.0 1.0.0
 #
 # Repos are siblings of this one (override the parent with ROCKETWELDER_ROOT):
-#   native-player/dist/RocketWelderPlayer-<player-version>.msi
-#     built by native-player/tools/win32/installer.cmd
+#   native-player/build-win-msi/installer/RocketWelderPlayer-<player-version>.msi
+#     built on this laptop by native-player/tools/win32/installer.cmd. There is no CI for it.
 #   native-player/dist/native-player_<player-version>_arm64.deb
 #     downloaded by native-player/release.sh
 #   native-player/dist/RocketWelderPlayer-<player-version>-arm64-v8a.apk
@@ -55,12 +55,12 @@ need "$MCP/packaging/guides/simulator-windows.md" "mcp Claude guides"
 need "$MCP/packaging/guides/simulator-macos.md" "mcp Claude guides"
 need "$MCP/packaging/guides/simulator-linux.md" "mcp Claude guides"
 
-MSI="$PLAYER/dist/RocketWelderPlayer-${PLAYER_VERSION}.msi"
+MSI="$PLAYER/build-win-msi/installer/RocketWelderPlayer-${PLAYER_VERSION}.msi"
 DEB="$PLAYER/dist/native-player_${PLAYER_VERSION}_arm64.deb"
 APK="$PLAYER/dist/RocketWelderPlayer-${PLAYER_VERSION}-arm64-v8a.apk"
 RW="$MCP/dist/RocketWelder.mcpb"
 SIM="$MCP/dist/Simulator.mcpb"
-need "$MSI" "build it with native-player/tools/win32/installer.cmd"
+need "$MSI" "build it on this laptop with native-player/tools/win32/installer.cmd. It writes build-win-msi/installer/. There is no CI for the MSI."
 need "$DEB" "native-player/release.sh downloads this into dist/"
 need "$APK" "the Player Android package, named RocketWelderPlayer-${PLAYER_VERSION}-arm64-v8a.apk"
 need "$RW" "mcp/packaging/pack-mcpb.sh"
